@@ -53,11 +53,14 @@ In the code chunk below, write code to create a new data frame called `sw_split_
 
 Make sure to `View()` the resulting data frame (remember: run `View()` in the Console, or click on the object name in the Environment) to ensure it worked as expected.
 
-**Note: You should get a warning about one piece dropped. What happens to the name in Row 49, which contains two dashes?
+**Note: You should get a warning about one piece dropped. What happens to the name in Row 49, which contains two dashes? The third name is lost.
 
 ```{r}
 # Your code here: 
-
+sw_split_name <- starwars %>% 
+  separate(col = name,
+           into = c("name_1", "name_2"),
+           sep = "-")
 
 ```
 
@@ -91,7 +94,12 @@ Make sure to `View()` the resulting data frame (remember: run `View()` in the Co
 
 ```{r}
 # Your code here:
-
+sw_skin_sep <- starwars %>% 
+  separate(col = skin_color,
+           into = c("skin_1","skin_2"),
+           sep = ",",
+           extra = "merge",
+           remove = FALSE)
 
 ```
 
@@ -127,7 +135,11 @@ In the code chunk below, starting from the `mpg` data create a new data frame ca
 
 ```{r}
 # Your code here: 
-
+mpg_model_class <- mpg %>% 
+  unite(col = model_class,
+        c(model, class),
+        sep = "-",
+        remove = FALSE)
 
 ```
 
@@ -157,8 +169,9 @@ In the code chunk below, use `ymd()` to convert a date that you choose in `YYYY-
 
 ```{r}
 # Your code here: 
-
-
+ymd(19960715)
+ymd("1996-07-15")
+ymd("1996/07/15")
 ```
 
 #### 3B. Follow me
@@ -182,8 +195,11 @@ In the code chunk below, create a vector (using `c()`, as above) stored as `some
 
 ```{r}
 # Your code here: 
+some_dates <- c(11061972, 02142007, 01301843)
+some_dates_converted <- mdy(some_dates)
+some_dates_converted
 
-
+class(some_dates_converted)
 ```
 
 #### 3C. Follow me
@@ -226,8 +242,16 @@ Starting from the `lakers` dataset, create a new dataset called `gasol_hookshots
 
 ```{r}
 # Your code here: 
+gasol_hookshots <- lakers %>% 
+  filter(player == "Pau Gasol", type == "hook") %>% 
+  mutate(date_new = ymd(date)) %>% 
+  mutate(month_new = month(date_new))
 
+hookshots_by_month <- gasol_hookshots %>% 
+  group_by(month_new) %>% 
+  count(month_new)
 
+hookshots_by_month
 ```
 
 ### 4. `dplyr::case_when()`
@@ -276,8 +300,11 @@ Note: If you add another condition within `case_when()` that is `TRUE ~ "some th
 
 ```{r}
 # Your code here: 
-
-
+storm_danger <- storms %>% 
+  mutate(danger = case_when(
+    status == "hurricane" ~ "high",
+    TRUE ~ "moderate"
+  ))
 ```
 
 ## 5. Practice version control w/git
